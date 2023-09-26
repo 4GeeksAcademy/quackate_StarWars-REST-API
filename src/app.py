@@ -133,6 +133,77 @@ def get_people_id(char_id):
     
     return "Invalid Method", 404
 
+@app.route('/people', methods=['POST'])
+@jwt_required()
+def add_new_character():
+    if request.method == 'POST':
+        people = Characters()
+        people.name = request.get_json()['name']
+        people.description = request.get_json()['description']
+        people.hair_color = request.get_json()['hair_color']
+        people.birth_year = request.get_json()['birth_year']
+        people.gender = request.get_json()['gender']
+        people.skin_color = request.get_json()['skin_color']
+        people.eye_color =request.get_json()['eye_color']
+
+        db.session.add(people)
+        db.session.commit()
+
+        # Show the updated version of the characters
+        characters = []
+        db_result = Characters.query.all()
+        for item in db_result:
+            characters.append(item.serialize())
+        return jsonify(characters), 200
+    
+    return "An error has ocurred!", 404
+
+@app.route('/people/<int:char_id>', methods=['PUT'])
+@jwt_required()
+def update_character(char_id):
+    if request.method == 'PUT':
+        people = Characters.query.get(char_id)
+
+        if people is None:
+            return jsonify({"error": "character not found"}), 404
+
+        people.name = request.get_json()['name']
+        people.description = request.get_json()['description']
+        people.hair_color = request.get_json()['hair_color']
+        people.birth_year = request.get_json()['birth_year']
+        people.gender = request.get_json()['gender']
+        people.skin_color = request.get_json()['skin_color']
+        people.eye_color = request.get_json()['eye_color']
+
+        db.session.commit()
+
+        # Show the updated version of the characters
+        characters = []
+        db_result = Characters.query.all()
+        for item in db_result:
+            characters.append(item.serialize())
+        return jsonify(characters), 200
+    
+    return "An error has ocurred!", 404
+
+@app.route('/people/<int:char_id>', methods=['DELETE'])
+@jwt_required()
+def delete_character(char_id):
+    if request.method == 'DELETE':
+        character = Characters.query.filter_by(id=char_id).first()
+
+        db.session.delete(character)
+        db.session.commit()
+
+        # Show the updated version of the characters
+        characters = []
+        db_result = Characters.query.all()
+        for item in db_result:
+            characters.append(item.serialize())
+        return jsonify(characters), 200
+    
+    return "Invalid Method", 404
+
 @app.route('/favorites/people/<int:char_id>', methods=['POST'])
 @jwt_required()
 def add_new_favorite_character(char_id):
@@ -199,6 +270,79 @@ def get_planets_id(planet_id):
     
     return "Invalid Method", 404
 
+@app.route('/planets', methods=['POST'])
+@jwt_required()
+def add_new_planet():
+    if request.method == 'POST':
+        planet = Planets()
+        planet.name = request.get_json()['name']
+        planet.description = request.get_json()['description']
+        planet.diameter = request.get_json()['diameter']
+        planet.rotation_period = request.get_json()['rotation_period']
+        planet.orbital_period = request.get_json()['orbital_period']
+        planet.population = request.get_json()['population']
+        planet.climate = request.get_json()['climate']
+        planet.terrain = request.get_json()['terrain']
+
+        db.session.add(planet)
+        db.session.commit()
+
+        # Show the updated version of the favorites
+        planets = []
+        db_result = Planets.query.all()
+        for item in db_result:
+            planets.append(item.serialize())
+        return jsonify(planets), 200
+    
+    return "An error has ocurred!", 404
+
+@app.route('/planets/<int:planet_id>', methods=['PUT'])
+@jwt_required()
+def update_planet(planet_id):
+    if request.method == 'PUT':
+        planet = Planets.query.get(planet_id)
+
+        if planet is None:
+            return jsonify({"error": "planet not found"}), 404
+
+        planet.name = request.get_json()['name']
+        planet.description = request.get_json()['description']
+        planet.diameter = request.get_json()['diameter']
+        planet.rotation_period = request.get_json()['rotation_period']
+        planet.orbital_period = request.get_json()['orbital_period']
+        planet.population = request.get_json()['population']
+        planet.climate = request.get_json()['climate']
+        planet.terrain = request.get_json()['terrain']
+
+        db.session.commit()
+
+        # Show the updated version of the planets
+        planets = []
+        db_result = Planets.query.all()
+        for item in db_result:
+            planets.append(item.serialize())
+        return jsonify(planets), 200
+    
+    return "An error has ocurred!", 404
+
+@app.route('/planets/<int:planet_id>', methods=['DELETE'])
+@jwt_required()
+def delete_planet(planet_id):
+    if request.method == 'DELETE':
+        planet = Planets.query.filter_by(id=planet_id).first()
+
+        db.session.delete(planet)
+        db.session.commit()
+
+        # Show the updated version of the planets
+        planets = []
+        db_result = Planets.query.all()
+        for item in db_result:
+            planets.append(item.serialize())
+        return jsonify(planets), 200
+    
+    return "Invalid Method", 404
+
 @app.route('/favorites/planets/<int:planet_id>', methods=['POST'])
 @jwt_required()
 def add_new_favorite_planet(planet_id):
@@ -259,6 +403,79 @@ def get_vehicles_id(vehicle_id):
     if request.method == 'GET':
         vehicles = []
         db_result = Vehicles.query.filter_by(id=vehicle_id).all()
+        for item in db_result:
+            vehicles.append(item.serialize())
+        return jsonify(vehicles), 200
+    
+    return "Invalid Method", 404
+
+@app.route('/vehicles', methods=['POST'])
+@jwt_required()
+def add_new_vehicle():
+    if request.method == 'POST':
+        vehicle = Vehicles()
+        vehicle.name = request.get_json()['name']
+        vehicle.description = request.get_json()['description']
+        vehicle.model = request.get_json()['model']
+        vehicle.vehicle_class = request.get_json()['vehicle_class']
+        vehicle.manufacturer = request.get_json()['manufacturer']
+        vehicle.length = request.get_json()['length']
+        vehicle.crew = request.get_json()['crew']
+        vehicle.cargo_capacity = request.get_json()['cargo_capacity']
+
+        db.session.add(vehicle)
+        db.session.commit()
+
+        # Show the updated version of the favorites
+        vehicles = []
+        db_result = Vehicles.query.all()
+        for item in db_result:
+            vehicles.append(item.serialize())
+        return jsonify(vehicles), 200
+    
+    return "An error has ocurred!", 404
+
+@app.route('/vehicles/<int:vehicle_id>', methods=['PUT'])
+@jwt_required()
+def update_vehicle(vehicle_id):
+    if request.method == 'PUT':
+        vehicle = Vehicles.query.get(vehicle_id)
+
+        if vehicle is None:
+            return jsonify({"error": "vehicle not found"}), 404
+
+        vehicle.name = request.get_json()['name']
+        vehicle.description = request.get_json()['description']
+        vehicle.model = request.get_json()['model']
+        vehicle.vehicle_class = request.get_json()['vehicle_class']
+        vehicle.manufacturer = request.get_json()['manufacturer']
+        vehicle.length = request.get_json()['length']
+        vehicle.crew = request.get_json()['crew']
+        vehicle.cargo_capacity = request.get_json()['cargo_capacity']
+
+        db.session.commit()
+
+        # Show the updated version of the vehicles
+        vehicles = []
+        db_result = Vehicles.query.all()
+        for item in db_result:
+            vehicles.append(item.serialize())
+        return jsonify(vehicles), 200
+    
+    return "An error has ocurred!", 404
+
+@app.route('/vehicles/<int:vehicle_id>', methods=['DELETE'])
+@jwt_required()
+def delete_vehicle(vehicle_id):
+    if request.method == 'DELETE':
+        vehicle = Vehicles.query.filter_by(id=vehicle_id).first()
+
+        db.session.delete(vehicle)
+        db.session.commit()
+
+        # Show the updated version of the vehicles
+        vehicles = []
+        db_result = Vehicles.query.all()
         for item in db_result:
             vehicles.append(item.serialize())
         return jsonify(vehicles), 200
